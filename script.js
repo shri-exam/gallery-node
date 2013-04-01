@@ -35,8 +35,8 @@
          * Требуемая высота и ширина
          * если тачскрин - то высота меньше на touch_e
          * */
-        var reqheight = ($window.height()-(20+touch_e));
-        var reqwidth = $window.width()-20;
+        var reqheight = ($window.height()-(10+touch_e));
+        var reqwidth = $window.width()-10;
         /*console.log('reqH=',reqheight,' reqW=',reqwidth);*/
         if ($img.attr('data-height')<reqheight && $img.attr('data-width')<reqwidth)
         {
@@ -320,7 +320,7 @@
         });
         return dd.promise();
     }
-    function getPhotoById(id){
+    /*function getPhotoById(id){
         var url = 'server.js?f=getphotobyid&id='+id;
         var dd = $.Deferred();
         var result = [];
@@ -328,7 +328,7 @@
             dd.resolve(data);
         });
         return dd.promise();
-    }
+    }  */
     $(function () {
         /* page load */
         var $window = $(window);
@@ -340,7 +340,7 @@
 
         $gallery.hover(function(){
             hovergallery = true;
-            $table_gallery.animate({bottom:'10px'},400);
+            $table_gallery.animate({bottom:'20px'},400);
         },function(){
             hovergallery = false;
             if (touch_e <= 0)
@@ -471,7 +471,9 @@
             });
         $main.delegate('.tiles','click',function(){
             loadAndRender($(this));
-        }).bind('spiner_show',function(){
+        })
+            .delegate('.lightbox','click',function(){$('.lightbox').remove();})
+            .bind('spiner_show',function(){
                 $('<div/>',{class:'spiner'}).css(
                     {
                         left:(($(window).width()-(200+touch_e))/2),
@@ -490,27 +492,32 @@
             $window.trigger('load_tiles_first')
                 .one('touchmove',function(){
                     $gallery.unbind('hover');
-                    touch_e = $('.gallery').height()+20;
+                    touch_e = $('.gallery').height()+10;
                     $window.trigger('resize');
-                    $table_gallery.animate({bottom:'10px'},400);
+                    $table_gallery.animate({bottom:'20px'},400);
 
                 });
         $('.krug_next').click(function(){
             var $tiles = $('.tiles');
             var ind = $tiles.index($('.current'));
-            ind++;
             /*console.log('current index=',ind);  */
             if (ind == ($tiles.length-1))
             {
+                console.log('******************************************** ind=',ind);
                 loadTiles(0,0).pipe(function(){
                     var $tiles = $('.tiles');
                     var ind = $tiles.index($('.current'));
-                    ind++;
-                    loadAndRender($tiles.eq(ind));
+                    console.log('*** NEXT - MORE ind=',ind);
+                    if (ind != ($tiles.length-1))
+                    {
+                        ind++;
+                        loadAndRender($tiles.eq(ind));
+                    }
                 });
             }
             else
             {
+                ind++;
                 loadAndRender($tiles.eq(ind));
             }
         });
@@ -524,8 +531,12 @@
                 loadTiles(0,0).pipe(function(){
                     var $tiles = $('.tiles');
                     var ind = $tiles.index($('.current'));
-                    ind--;
-                    loadAndRender($tiles.eq(ind));
+                    console.log('*** ESHE RAZ ind=',ind);
+                    if (ind !=0)
+                    {
+                        ind--;
+                        loadAndRender($tiles.eq(ind));
+                    }
                 });
             }
             else

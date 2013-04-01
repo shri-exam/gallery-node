@@ -19,7 +19,7 @@ div {
     right: -20px;
 }
 .gallery {
-    height: 140px;
+    height: 150px;
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -31,7 +31,7 @@ div {
     position: absolute;
     min-height: 100px;
     min-width: 120%;
-    bottom: 10px;
+    bottom: 20px;
 }
 .tiles {
     width: 100px;
