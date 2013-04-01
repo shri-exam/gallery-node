@@ -1,9 +1,17 @@
 (function () {
 /* main begin */
 
-    var blockload = false;
-    var touch_e = 0;
+    var blockload = false; /* блок загрузки изображений */
+    var touch_e = 0;  /* тачскрин  , по умолчанию 0*/
 
+    /*
+    * @param {jQuery} $img
+    * @return {promise}
+    *
+    * загружает большую картинку
+    * и выводит в лайтбокс
+    *
+    * */
     function loadAndRender($img)
     {
         var lr = $.Deferred();
@@ -26,6 +34,14 @@
         return lr.promise();
     }
 
+    /*
+    * @param {jQuery} $img
+    * @return {promise} - resolve ({jQuery} $img)
+    *
+    * меняет ширины и высоту , а так же
+    * css (top , left)
+    *
+    * */
     function resizeImage($img)
     {
         $window = $(window);
@@ -78,7 +94,13 @@
         rs.resolve($img);
         return rs.promise();
     }
-
+    /*
+    * @param {jQuery} $img
+    * @return {promise} - resolve ({jQuery} $img)
+    *
+    * загружает новое большое изображение
+    *
+    * */
     function loadImg($img)
     {
         var ld = $.Deferred();
@@ -100,7 +122,13 @@
         else {ld.resolve(false);}
         return ld.promise();
     }
-
+    /*
+    * @param {jQuery}  img, {Number} oldInvex, {Number} newIndex
+    * @return {promise}
+    *
+    * меняет изображение в лайтбоксе
+    *
+    * */
     function renderLightbox($img,oldIndex,newIndex)
     {
         /*console.log('render img=',$img,' old=',oldIndex,' new=',newIndex);*/
@@ -144,7 +172,15 @@
         }
         return rl.promise();
     }
-
+    /*
+    * @param {jQuery} $img, {Number} show, {Number} right
+    * return {promise} - resolve ({jQuery} $img)
+    *
+    * Двигает изображение (слайдер)
+    * show - 1 показывает, 0 - скрывает
+    * right - 1 пролистывание справа, 0 - слева
+    *
+    * */
     function imageSlide($img,show,right)
     {
         console.log('image Slide $img=',$img,' show=',show,' right=',right);
@@ -174,7 +210,13 @@
         }
         return is.promise();
     }
-
+    /*
+    * @param {jQuery} $img
+    * @return {promise} - resolve ({Number} oldIndex, {Number} newIndex, {jQuery} $img)
+    * Двигает скрол галереи и возвращает
+    * старый и новый индекс активной картинки
+    *
+    * */
     function sdvig($img)
     {
         /*console.log('sdvig img=',$img);*/
@@ -196,29 +238,40 @@
 
         return sdv.promise();
     }
-
+    /*
+    * @param {string} hash
+    * @return {string}
+    *
+    * Парсинг location.hash
+    *
+    * */
     function getIdByHash(hash)
     {
         var reg = /id=(\d+)/;
         var r = reg.exec(hash);
-        console.log('getByHash r=',r);
         if (r)
         {
             if (r[1])
             {
-                console.log('getIdByHash = ',r[1]);
                 return r[1];
             }
             else return false;
         }
         else
         {
-            console.log('getIdByHash = NO');
             return false;
         }
     }
     /*
-    * @param {Number} next
+    * @param {Number} next, {Number} self [,{String} firstid] [,{Number} c]
+    * @return {promise} - resolve ({Number} - result.length)
+    *
+    * Подгружает картинки
+    * next = 1  - загржаем после последней , next = 0 - перед первой
+    * self = включая себя или нет.
+    * firstid - с какой начать (по умолчанию первая или последняя в галереи)
+    * с - увеличение подгружаемых картинок на величину с
+    *
     * */
     function loadTiles(next,self,firstid,c)
     {
@@ -227,7 +280,6 @@
             c = c || 0;
             firstid = firstid || false;
             blockload = true;
-            /*console.log('require loadTiles()');*/
             if (firstid === false)
             {
                 var $tiles = $('.tiles');
@@ -252,7 +304,6 @@
                         $last = $tiles.eq(0);
                         id =  $last.attr('data-id'); next = 0;
                     }
-                    console.log( '*** $last = ',$last);
                 }
             }
             else {
@@ -267,9 +318,7 @@
                     var vv = 0;
                     if (next === 1)
                     {
-                        console.log('next===1');
-                        //vv = $('.gallery').scrollLeft()+l*100;
-                        //$('.gallery').animate({scrollLeft:vv},1);
+
                     }
                     else
                     {
@@ -311,6 +360,13 @@
         }
 
     }
+    /*
+    * @rapam {string} id, {Number} count, {Number} next, {Number} self
+    * @return {promise} - resolve ({Array} result)
+    *
+    * Возвращает массив обьектов с новыми изображениями tiles
+    *
+    * */
     function getNextTilesById(id,count,next,self){
         console.log('require getNextTilesById()');
         var url = 'server.js?f=getnexttilesbyid&id='+id+'&count='+count+'&next='+next+'&self='+self;
@@ -320,70 +376,36 @@
         });
         return dd.promise();
     }
-    /*function getPhotoById(id){
-        var url = 'server.js?f=getphotobyid&id='+id;
-        var dd = $.Deferred();
-        var result = [];
-        $.getJSON(url,function(data){
-            dd.resolve(data);
-        });
-        return dd.promise();
-    }  */
+
     $(function () {
         /* page load */
         var $window = $(window);
-        var $doc = $(document);
         var $main = $('.main');
         var $gallery = $('.gallery');
         var hovergallery = false;
         var $table_gallery = $('.table_gallery');
 
-        $gallery.hover(function(){
-            hovergallery = true;
-            $table_gallery.animate({bottom:'20px'},800);
-        },function(){
-            hovergallery = false;
-            if (touch_e <= 0)
-            {
-                $table_gallery.animate({bottom:'-200px'},800);
-            }
-        });
 
-
-
-        $main.bind('mousewheel  DOMMouseScroll',function(e){
-            if (hovergallery)
-            {
-                if (e.type == 'mousewheel')
+        /* обработчики событий */
+        $gallery
+            .hover(function(){
+                hovergallery = true;
+                $table_gallery.animate({bottom:'20px'},800);
+                },function(){
+                hovergallery = false;
+                if (touch_e <= 0)
                 {
-                    /*console.log('wheelDeltaYdelta=', e.originalEvent.wheelDeltaY);
-                     console.log('e=',e);
-                     console.log('wheelDelta=',e.originalEvent.wheelDelta);*/
-                    if (e.originalEvent.wheelDeltaY<0) {$gallery.trigger('scroll_right');}
-                    else {$gallery.trigger('scroll_left');}
+                    $table_gallery.animate({bottom:'-200px'},800);
                 }
-                else
-                {
-                    /* firefox */
-                    /*console.log('mozilla',e.originalEvent.detail);  */
-                    if (e.originalEvent.detail<0) {$gallery.trigger('scroll_left');}
-                    else {$gallery.trigger('scroll_right');}
-                }
-            }
-            e.preventDefault();
-            //$(this).trigger('scrolling');
-        })
-            /*.bind('gallery_replace',function(){
-                $gallery.css({bottom:($('.main').height()-$(window).height()-20)+'px'});
-            })*/;
-        $gallery.bind('scroll_left',function(){
-            console.log('gallery bind scroll_left');
-            $('.gallery').scrollLeft($('.gallery').scrollLeft()-40);
+            })
+            .bind('scroll_left',function(){
+                console.log('gallery bind scroll_left');
+                $('.gallery').scrollLeft($('.gallery').scrollLeft()-40);
             })
             .bind('scroll_right',function(){
                 console.log('gallery bind scroll_right');
                 $('.gallery').scrollLeft($('.gallery').scrollLeft()+40);
-                })
+            })
             .bind('scroll',function(){
                 console.log('gallery bind Scroll');
                 if ($('.gallery').scrollLeft() == 0)
@@ -401,29 +423,50 @@
             .bind('right_30',function(){
                 $(this).animate({scrollLeft:($(this).scrollLeft()+30)},300);
             });
-        $window.resize(function(){
-            var $l = $('.lightbox').eq(0);
-            $l.siblings().filter('.lightbox').remove();
-            resizeImage($l);
+
+
+        $main.bind('mousewheel  DOMMouseScroll',function(e){
+            if (hovergallery)
+            {
+                if (e.type == 'mousewheel')
+                {
+                    if (e.originalEvent.wheelDeltaY<0) {$gallery.trigger('scroll_right');}
+                    else {$gallery.trigger('scroll_left');}
+                }
+                else
+                {
+                    /* firefox */
+                    if (e.originalEvent.detail<0) {$gallery.trigger('scroll_left');}
+                    else {$gallery.trigger('scroll_right');}
+                }
+            }
+            e.preventDefault();
         });
 
 
-
-        console.log('start');
-
-        var currentId = getIdByHash(location.hash);
-        console.log('currentId=',currentId);
-        if (currentId === false) currentId = 0;
-        $main.trigger('gallery_replace');
 
 
 
         $('body').hover(function(){$('.krug').animate({opacity:'0.5'},300);},
             function(){$('.krug').animate({opacity:'0'},300);})
 
-        $window.bind('change_hash',function(){
+        $window
+            .resize(function(){
+                var $l = $('.lightbox').eq(0);
+                $l.siblings().filter('.lightbox').remove();
+                resizeImage($l);
+            })
+            .one('touchmove',function(){
+                $gallery.unbind('hover');
+                touch_e = $('.gallery').height()+10;
+                $window.trigger('resize');
+                $table_gallery.animate({bottom:'20px'},800);
+
+            })
+            .bind('change_hash',function(){
             location.hash = 'id='+$('.current').eq(0).attr('data-id');
-        }).one('load_first',function(){
+            })
+            .one('load_first',function(){
                 /* first image lightbox */
                 var h = getIdByHash(location.hash);
                 if (h)
@@ -472,9 +515,10 @@
                     }
                 });
             });
-        $main.delegate('.tiles','click',function(){
-            loadAndRender($(this));
-        })
+        $main
+            .delegate('.tiles','click',function(){
+                loadAndRender($(this));
+            })
             .delegate('.lightbox','click',function(){$('.lightbox').remove();})
             .bind('spiner_show',function(){
                 $('<div/>',{class:'spiner'}).css(
@@ -492,21 +536,13 @@
                 $main.trigger('spiner_hide');
             });
 
-            $window.trigger('load_tiles_first')
-                .one('touchmove',function(){
-                    $gallery.unbind('hover');
-                    touch_e = $('.gallery').height()+10;
-                    $window.trigger('resize');
-                    $table_gallery.animate({bottom:'20px'},800);
 
-                });
+
         $('.krug_next').click(function(){
             var $tiles = $('.tiles');
             var ind = $tiles.index($('.current'));
-            /*console.log('current index=',ind);  */
             if (ind == ($tiles.length-1))
             {
-                console.log('******************************************** ind=',ind);
                 loadTiles(0,0).pipe(function(){
                     var $tiles = $('.tiles');
                     var ind = $tiles.index($('.current'));
@@ -528,7 +564,6 @@
             var $tiles = $('.tiles');
             var ind = $tiles.index($('.current'));
             ind--;
-            /*console.log('current index=',ind);  */
             if (ind <= 0)
             {
                 loadTiles(0,0).pipe(function(){
@@ -548,7 +583,19 @@
             }
 
         });
-        $('.krug').hover(function(){$(this).animate({opacity:'1'},300);},function(){$(this).animate({opacity:'0.5'},300);});
+        $('.krug').hover(function()
+        {
+            $(this).animate({opacity:'1'},300);
+        },function()
+        {
+            $(this).animate({opacity:'0.5'},300);
+        });
+
+        var currentId = getIdByHash(location.hash);
+        if (currentId === false) currentId = 0;
+        $main.trigger('gallery_replace');
+        $window.trigger('load_tiles_first');
+
         /* end page load */
     });
 /* main end */
