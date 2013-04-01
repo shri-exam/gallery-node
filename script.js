@@ -340,12 +340,12 @@
 
         $gallery.hover(function(){
             hovergallery = true;
-            $table_gallery.animate({bottom:'20px'},400);
+            $table_gallery.animate({bottom:'20px'},800);
         },function(){
             hovergallery = false;
             if (touch_e <= 0)
             {
-                $table_gallery.animate({bottom:'-200px'},400);
+                $table_gallery.animate({bottom:'-200px'},800);
             }
         });
 
@@ -417,6 +417,9 @@
         $main.trigger('gallery_replace');
 
 
+
+        $('body').hover(function(){$('.krug').animate({opacity:'0.5'},300);},
+            function(){$('.krug').animate({opacity:'0'},300);})
 
         $window.bind('change_hash',function(){
             location.hash = 'id='+$('.current').eq(0).attr('data-id');
@@ -494,7 +497,7 @@
                     $gallery.unbind('hover');
                     touch_e = $('.gallery').height()+10;
                     $window.trigger('resize');
-                    $table_gallery.animate({bottom:'20px'},400);
+                    $table_gallery.animate({bottom:'20px'},800);
 
                 });
         $('.krug_next').click(function(){
