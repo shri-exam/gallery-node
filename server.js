@@ -130,18 +130,6 @@ function getNextTilesById(id,count,next,self,images)
     return result;
 }
 var g = getAllPhotoByAlbum(album);
- 
-    
-    
-        
-        
-            
-            
-            
-
-
-
-
 
  
 function getContentType(s)
@@ -168,20 +156,14 @@ function getContentType(s)
     else return "text/plain";
 
 
-} 
- 
-
+}
   
 function start(route) {
   function onRequest(request, response) {
-    /*console.log("Request received.");*/
+
     var query = url.parse(request.url);
     route(query,request,response);
-    /*response.writeHead(200, {"Content-Type": "application/json"});*/
-    /*response.write(result);*/
-    /*g.pipe(function(images){
-        response.write(JSON.stringify(getNextTilesById('174584',10,false,true,images)));
-    });*/
+
   }
 
   http.createServer(onRequest).listen(8080);
