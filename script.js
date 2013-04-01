@@ -495,7 +495,46 @@
                     $table_gallery.animate({bottom:'10px'},400);
 
                 });
+        $('.krug_next').click(function(){
+            var $tiles = $('.tiles');
+            var ind = $tiles.index($('.current'));
+            ind++;
+            /*console.log('current index=',ind);  */
+            if (ind == ($tiles.length-1))
+            {
+                loadTiles(0,0).pipe(function(){
+                    var $tiles = $('.tiles');
+                    var ind = $tiles.index($('.current'));
+                    ind++;
+                    loadAndRender($tiles.eq(ind));
+                });
+            }
+            else
+            {
+                loadAndRender($tiles.eq(ind));
+            }
+        });
+        $('.krug_prep').click(function(){
+            var $tiles = $('.tiles');
+            var ind = $tiles.index($('.current'));
+            ind--;
+            /*console.log('current index=',ind);  */
+            if (ind <= 0)
+            {
+                loadTiles(0,0).pipe(function(){
+                    var $tiles = $('.tiles');
+                    var ind = $tiles.index($('.current'));
+                    ind--;
+                    loadAndRender($tiles.eq(ind));
+                });
+            }
+            else
+            {
+                loadAndRender($tiles.eq(ind));
+            }
 
+        });
+        $('.krug').hover(function(){$(this).animate({opacity:'1'},300);},function(){$(this).animate({opacity:'0.5'},300);});
         /* end page load */
     });
 /* main end */
