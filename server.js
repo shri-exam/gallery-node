@@ -72,10 +72,17 @@ function getAllPhotoByAlbum(url_main){
 */
 function searchIndex(id,images) {
     for (var index=0;index<images.length;index++)
-    {if (id==images[index].id) return index;}return false;
+    {
+        if (images[index])
+        {
+            if (id==images[index].id) return index;
+        }
     }
+    console.log('serachIndex = return false');
+    return false;
+}
 /*
-@parad {string} id, {array} images
+@param {string} id, {array} images
 @return {object} obj
 */
 function getPhotoById(id,images)
@@ -96,31 +103,31 @@ function getNextTilesById(id,count,next,self,images)
     count = Number(count); next = Number(next); self = Number(self);
     if (ind === false)
     {
-        return false;
-        console.log('server getNextTilesById = return false');
+        /*return false;  */
+        /* set default index */
+        ind = 0;
+        console.log('*** set default index');
     }
-    else
+    var result = [];
+    var i = (self === 1)?0:1;
+    var newIndex;
+    for (i;i<count;i++)
     {
-        var result = [];
-        var i = (self === 1)?0:1;
-        var newIndex;
-        for (i;i<count;i++)
-        {
 
-            if (next === 1)
-            {
-                newIndex = ind + i;
-            }
-            else
-            {
-                newIndex = ind - i;
-            }
-            console.log('ind=',ind,' newIndex=',newIndex);
-            if (images[newIndex]) {result[result.length] = images[newIndex];}
-            else {console.log('*** ostanovilis'); break;}
+        if (next === 1)
+        {
+            newIndex = ind + i;
         }
-        return result;
+        else
+        {
+            newIndex = ind - i;
+        }
+        console.log('ind=',ind,' newIndex=',newIndex);
+        if (images[newIndex]) {result[result.length] = images[newIndex];}
+        else {console.log('*** ostanovilis'); break;}
     }
+
+    return result;
 }
 var g = getAllPhotoByAlbum(album);
  
