@@ -523,7 +523,7 @@
             .bind('spiner_show',function(){
                 $('<div/>',{class:'spiner'}).css(
                     {
-                        left:(($(window).width()-(200+touch_e))/2),
+                        left:(($(window).width()-200)/2),
                         top:(($(window).height()-(200+touch_e))/2)
                     })
                     .appendTo('.main');
