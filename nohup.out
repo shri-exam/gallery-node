@@ -2702,3 +2702,37 @@ ind= 68  newIndex= 71
 ind= 68  newIndex= 72
 ind= 68  newIndex= 73
 ind= 68  newIndex= 74
+query =  /
+query =  /style.css
+query =  /script.js
+query =  /server.js?f=getnexttilesbyid&id=0&count=16&next=1&self=1
+ind= 0  newIndex= 0
+ind= 0  newIndex= 1
+ind= 0  newIndex= 2
+ind= 0  newIndex= 3
+ind= 0  newIndex= 4
+ind= 0  newIndex= 5
+ind= 0  newIndex= 6
+ind= 0  newIndex= 7
+ind= 0  newIndex= 8
+ind= 0  newIndex= 9
+ind= 0  newIndex= 10
+ind= 0  newIndex= 11
+ind= 0  newIndex= 12
+ind= 0  newIndex= 13
+ind= 0  newIndex= 14
+ind= 0  newIndex= 15
+query =  /krug_prep.png
+query =  /krug_next.png
+query =  /loading.gif
+query =  /server.js?f=getnexttilesbyid&id=727927&count=8&next=0&self=0
+ind= 0  newIndex= -1
+*** ostanovilis
+query =  /server.js?f=getnexttilesbyid&id=714575&count=8&next=1&self=0
+ind= 15  newIndex= 16
+ind= 15  newIndex= 17
+ind= 15  newIndex= 18
+ind= 15  newIndex= 19
+ind= 15  newIndex= 20
+ind= 15  newIndex= 21
+ind= 15  newIndex= 22

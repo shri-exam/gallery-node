@@ -525,8 +525,7 @@
                     {
                         left:(($(window).width()-200)/2),
                         top:(($(window).height()-(200+touch_e))/2)
-                    })
-                    .appendTo('.main');
+                    }).appendTo('.main');
             })
             .bind('spiner_hide',function(){
                 $('.spiner').remove();
